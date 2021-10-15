@@ -30,7 +30,7 @@ It initializes and returns the stacked algorithm prediction model.
 In case of bad input, it will return -2 (illegitimate partition input)
 }
 \description{
-This function reads data from a DATACSV.csv or data table file, partitions them according to the partition parameter
+This function reads data from a DATACSV.csv or data table file. It partitions them according to the partition parameter
 and labels them, trains all of the models and 'stacks' them into one, assesses them using the second set
 of the partition data, optionally plots some info relating the accuracy of the models and returns them for further use.
 }

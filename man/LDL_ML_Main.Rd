@@ -2,7 +2,7 @@
 % Please edit documentation in R/9ML_models_functions.R
 \name{LDL_ML_Main}
 \alias{LDL_ML_Main}
-\title{Create, train, assess and return an ML prediction model}
+\title{Create, train, assess and return an ML prediction model.}
 \usage{
 LDL_ML_Main(DataCSV, partition, MLmethod, ReportMultiPlot = TRUE)
 }
@@ -26,7 +26,7 @@ It initializes and returns the ML prediction model. In case of bad input,
 it will return either -2 (illegitimate partition input) or -3 (illegitimate ML method input).
 }
 \description{
-This function reads data from a DATACSV.csv, or a data table file, partitions them according to the partition parameter
+This function reads data from a DATACSV.csv, or a data table file. It partitions them according to the partition parameter
 and labels them, trains the model (according to the ML method chosen and the first set of the partitioned data),
 assesses the model using the second set of the partition data and returns it.
 }

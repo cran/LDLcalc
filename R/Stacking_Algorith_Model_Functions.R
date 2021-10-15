@@ -25,7 +25,7 @@ LDL_ML_train_StackingAlgorithm<-function(trainData){
 
 #' Create, train, assess and return a Stacking Algorithm Machine Learning prediction model
 #'
-#' This function reads data from a DATACSV.csv or data table file, partitions them according to the partition parameter
+#' This function reads data from a DATACSV.csv or data table file. It partitions them according to the partition parameter
 #' and labels them, trains all of the models and 'stacks' them into one, assesses them using the second set
 #' of the partition data, optionally plots some info relating the accuracy of the models and returns them for further use.
 #'
@@ -68,6 +68,7 @@ LDL_ML_Main_StackingAlgorithm<-function(DataCSV, partition, ReportMultiPlot =TRU
   }
   if (ComparisonPlot == TRUE){
     a = Comparison_Models_Plot(results)
+    print(a)
 
   }
   return(stackAlgModel)

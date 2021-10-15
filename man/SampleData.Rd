@@ -18,6 +18,6 @@ A \code{tibble} with 5 elements, which are:
 SampleData
 }
 \description{
-A dataset \code{tibble} for the Test of your model, containing Low Density Lipoprotein, Total Cholesterol, Triglyceride and High-Density Lipoprotein values of 2000 cases. It is used as data for the examples.
+A dataset \code{tibble} for the test of your model, containing values of 2000 cases. It is used as data for the examples.
 }
 \keyword{datasets}

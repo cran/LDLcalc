@@ -20,7 +20,7 @@ Comparison_Models_Plot<-function(results){
 
 #' Plots a correlation plot to see the correlation between different columns of your data, for example LDL,HDL relative to age
 #'
-#' @param listDaten This is a list of the data amongst which you want to see the correlation. You need to provide at least two
+#' @param listDaten This is a list of the data amongst which one can see the correlation. One needs to provide at least two
 #' columns of equal length in order to see the correlation between them
 #' @importFrom stats cor
 #' @return No return value, it prints the requested diagram.

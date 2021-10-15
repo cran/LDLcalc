@@ -3,7 +3,7 @@
 
 #' Create, train, assess and return all ML prediction models
 #'
-#' This function reads data from a DATACSV.csv or a data.table file, partitions them according to the partition parameter
+#' This function reads data from a DATACSV.csv or a data.table file.It partitions them according to the partition parameter
 #' and labels them, trains all of the models, assesses them using the second set of the partition data, optionally
 #' plots some info relating the accuracy of the models and returns them for further use.
 #'

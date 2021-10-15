@@ -1,5 +1,5 @@
 #'@title Anonymous real data
-#'@description A dataset \code{tibble} for the Test of your model, containing Low Density Lipoprotein, Total Cholesterol, Triglyceride and High-Density Lipoprotein values of 2000 cases. It is used as data for the examples.
+#'@description A dataset \code{tibble} for the test of your model, containing values of 2000 cases. It is used as data for the examples.
 #'
 #'@format A \code{tibble} with 5 elements, which are:
 #'\describe{

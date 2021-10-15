@@ -16,7 +16,7 @@ or a data table of sets of said values.}
 The predicted LDL value(s).
 }
 \description{
-This function predicts and returns your predictions, based on the model you previously trained.
+This function predicts and returns  predictions, based on the model previously trained.
 }
 \examples{
 modelPrediction = LDL_ML_predict(model,data.table::data.table(CHOL=170.5,HDL=35.12,TG=175))

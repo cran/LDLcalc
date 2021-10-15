@@ -53,7 +53,7 @@ LDL_ML_train<-function(trainData,MLmethod){
 
 #' Predict LDL value(s)
 #'
-#' This function predicts and returns your predictions, based on the model you previously trained.
+#' This function predicts and returns  predictions, based on the model previously trained.
 #'
 #' @param model The model with which the predictions will be made.
 #' @param data The data with which the predictions will be made, can either be a single set of (CHOL,HDL,TG) values
@@ -69,9 +69,9 @@ LDL_ML_predict<-function(model,data){
   return(predictions)
 }
 
-#' Create, train, assess and return an ML prediction model
+#' Create, train, assess and return an ML prediction model.
 #'
-#' This function reads data from a DATACSV.csv, or a data table file, partitions them according to the partition parameter
+#' This function reads data from a DATACSV.csv, or a data table file. It partitions them according to the partition parameter
 #' and labels them, trains the model (according to the ML method chosen and the first set of the partitioned data),
 #' assesses the model using the second set of the partition data and returns it.
 #'

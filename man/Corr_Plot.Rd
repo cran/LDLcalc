@@ -7,7 +7,7 @@
 Corr_Plot(listDaten)
 }
 \arguments{
-\item{listDaten}{This is a list of the data amongst which you want to see the correlation. You need to provide at least two
+\item{listDaten}{This is a list of the data amongst which one can see the correlation. One needs to provide at least two
 columns of equal length in order to see the correlation between them}
 }
 \value{
