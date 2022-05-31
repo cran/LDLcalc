@@ -1,10 +1,7 @@
 # This .R file requires no external libraries to run
 
-
-#' Calculates and returns the LDL Value for any of the 12 different equations
-#'
-#' This function calculates and returns the LDL value computed from any of the 12 named equations.
-#'
+#' @title Calculates and returns the LDL Value for any of the 12 different equations
+#' @description This function calculates and returns the LDL value computed from any of the 12 named equations.
 #' @param TC The TC (Total Cholesterol) value.
 #' @param HDL The HDL (High-density lipoprotein- cholesterol) value.
 #' @param TG The TG (Triglyceride) value.
@@ -17,7 +14,7 @@
 #' @export
 LDL_eq<-function(TC,HDL,TG,EqMethod){
   if ((EqMethod=="Friedewald")&(TG>=400)){
-    print("Friedewald equation is not valid for TG values >= 400.")
+    message("Friedewald equation is not valid for TG values >= 400.")
     return (-1)
   }
   else if ((EqMethod=="Friedewald")&(TG<400)){
@@ -84,15 +81,13 @@ LDL_eq<-function(TC,HDL,TG,EqMethod){
 
   else
     {
-    print("No such equation type exists in the package.")
+      message("No such equation type exists in the package.")
     return (404)
     }
 }
 
-#' Calculates and returns the LDL values using all available equations
-#'
-#' This function calculates and returns the LDL values computed with all of the 12 named equations.
-#'
+#' @title Calculates and returns the LDL values using all available equations
+#' @description This function calculates and returns the LDL values computed with all of the 12 named equations.
 #' @param TC The TC (Total Cholesterol) value.
 #' @param HDL The HDL (High-density lipoprotein-cholesterol) value.
 #' @param TG The TG (Triglyceride) value.
@@ -106,7 +101,7 @@ LDLallEq<-function(TC,HDL,TG){
   LDLallEquations<-c()
   for (i in (seq(1:15 ))){
     LDLallEquations[i]<-LDL_eq(TC,HDL,TG,EqMethod[i])
-    LDLallEquations1=print(paste(EqMethod[i],":" ,LDLallEquations[i]))
+    LDLallEquations1=message(paste(EqMethod[i],":" ,LDLallEquations[i]))
   }
   return("LDL was calculated using all available equations")
 }

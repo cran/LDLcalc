@@ -19,6 +19,6 @@ The predicted LDL value(s).
 This function predicts and returns  predictions, based on the model previously trained.
 }
 \examples{
-modelPrediction = LDL_ML_predict(model,data.table::data.table(CHOL=170.5,HDL=35.12,TG=175))
+modelPrediction = LDL_ML_predict(model$model,data.table::data.table(CHOL=170.5,HDL=35.12,TG=175))
 
 }

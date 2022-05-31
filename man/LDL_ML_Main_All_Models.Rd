@@ -36,6 +36,6 @@ plots some info relating the accuracy of the models and returns them for further
 }
 \examples{
 \donttest{
-allModels = LDL_ML_Main_All_Models(SampleData,0.8,ReportMultiPlot = FALSE,ComparisonPlot=FALSE)
+allModels = LDL_ML_Main_All_Models(SampleData, 0.8,ReportMultiPlot = FALSE,ComparisonPlot=FALSE)
 }
 }

@@ -2,19 +2,21 @@
 % Please edit documentation in R/Plot_functions.R
 \name{Corr_Plot}
 \alias{Corr_Plot}
-\title{Plots a correlation plot to see the correlation between different columns of your data, for example LDL,HDL relative to age}
+\title{Correlation plot}
 \usage{
 Corr_Plot(listDaten)
 }
 \arguments{
-\item{listDaten}{This is a list of the data amongst which one can see the correlation. One needs to provide at least two
+\item{listDaten}{This is a list of the data between which one can see
+the correlation. One needs to provide at least two
 columns of equal length in order to see the correlation between them}
 }
 \value{
 No return value, it prints the requested diagram.
 }
 \description{
-Plots a correlation plot to see the correlation between different columns of your data, for example LDL,HDL relative to age
+Plots a correlation plot to see the correlation between different columns
+of your data, for example LDL,HDL relative to age.
 }
 \examples{
 Corr_Plot(SampleData[1:5])

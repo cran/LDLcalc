@@ -51,17 +51,15 @@ LDL_ML_train<-function(trainData,MLmethod){
     return(model_rf)}
 }
 
-#' Predict LDL value(s)
-#'
-#' This function predicts and returns  predictions, based on the model previously trained.
-#'
+#' @title Predict LDL value(s)
+#' @description This function predicts and returns  predictions, based on the model previously trained.
 #' @param model The model with which the predictions will be made.
 #' @param data The data with which the predictions will be made, can either be a single set of (CHOL,HDL,TG) values
 #' or a data table of sets of said values.
 #' @return The predicted LDL value(s).
 #' @importFrom stats predict
 #' @examples
-#' modelPrediction = LDL_ML_predict(model,data.table::data.table(CHOL=170.5,HDL=35.12,TG=175))
+#' modelPrediction = LDL_ML_predict(model$model,data.table::data.table(CHOL=170.5,HDL=35.12,TG=175))
 #'
 #' @export
 LDL_ML_predict<-function(model,data){
@@ -69,12 +67,10 @@ LDL_ML_predict<-function(model,data){
   return(predictions)
 }
 
-#' Create, train, assess and return an ML prediction model.
-#'
-#' This function reads data from a DATACSV.csv, or a data table file. It partitions them according to the partition parameter
+#' @title  Create, train, assess and return an ML prediction model.
+#' @description This function reads data from a DATACSV.csv, or a data table file. It partitions them according to the partition parameter
 #' and labels them, trains the model (according to the ML method chosen and the first set of the partitioned data),
 #' assesses the model using the second set of the partition data and returns it.
-#'
 #' @param DataCSV The .csv or a data table file, path containing the data with which the model will be trained and assessed. Must contain
 #' at least 4 columns, named "CHOL", "HDL", "TG" and "LDLd", through which the train data and the validation data will be
 #' extracted.
@@ -126,5 +122,5 @@ LDL_ML_Main<-function(DataCSV, partition, MLmethod, ReportMultiPlot = TRUE){
     }
     ReportMultiPlot(predictions,validationData$LDLd,modelNamesList[index])
   }
-  return(model)
+  return(list("model"=model,"trainData"=trainData,"testData"=validationData))
 }

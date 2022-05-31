@@ -2,17 +2,18 @@
 
 # Read the .csv file
 CsvRead<-function(CsvData){
-  if (length(class(CsvData)) == 1 && class(CsvData) == "character"){
-    Data<-data.table::fread(CsvData)
-    return(Data)
-  }
-  else if (sum(ifelse(class(CsvData) == c("data.table","data.frame"),1,0)) == 2){
+  if (inherits(CsvData,"data.table")==TRUE){
     return(CsvData)
   }
-  else
+  else if (inherits(CsvData,"data.table")==FALSE)
   {
-    stop("The data you entered is in neither .csv nor data.table format.")
+    CsvData<-data.table::as.data.table(CsvData)
+    return(CsvData)
   }
+  else{
+    stop("The data you entered is not a correct format.")
+  }
+
 }
 
 # Create partitions from your .csv file extracted data table

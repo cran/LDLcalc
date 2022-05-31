@@ -4,6 +4,7 @@
 # Using a Stacking Algorithm, creates a combination all models to predict LDL values
 # This function creates and returns a prediction model made by stacking the 9 others in the LDL_ML_Main
 #' @importFrom utils capture.output
+#' @importFrom resample resample
 LDL_ML_train_StackingAlgorithm<-function(trainData){
   Folds=0
   dimtrain=dim(trainData)

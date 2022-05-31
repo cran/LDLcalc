@@ -5,12 +5,12 @@
 \alias{model}
 \title{A trained model}
 \format{
-An object of class \code{train} (inherits from \code{train.formula}) of length 23.
+An object of class \code{list} of length 3.
 }
 \usage{
 model
 }
 \description{
-An already trained ML model with the "lm" method using the default data from the package, to be used in the predict example{, and potentially by the user for further predictions}.
+An already trained ML model (including trainData & testData) with the "lm" method using the default data from the package, to be used in the predict example{, and potentially by the user for further predictions}.
 }
 \keyword{datasets}

@@ -1,12 +1,9 @@
 # This .R file requires "caret" and "resample" packages to run
 
-
-#' Create, train, assess and return all ML prediction models
-#'
-#' This function reads data from a DATACSV.csv or a data.table file.It partitions them according to the partition parameter
+#' @title Create, train, assess and return all ML prediction models
+#' @description This function reads data from a DATACSV.csv or a data.table file.It partitions them according to the partition parameter
 #' and labels them, trains all of the models, assesses them using the second set of the partition data, optionally
 #' plots some info relating the accuracy of the models and returns them for further use.
-#'
 #' @param DataCSV The .csv or a data table file, path containing the data with which the model will be trained and assessed. Must contain
 #'  at least 4 columns, named "CHOL", "HDL", "TG" and "LDLd", through which the train data and the validation data will be
 #'  extracted.
@@ -20,7 +17,7 @@
 #'  it will return  -2 (illegitimate partition input).
 #' @examples
 #' \donttest{
-#' allModels = LDL_ML_Main_All_Models(SampleData,0.8,ReportMultiPlot = FALSE,ComparisonPlot=FALSE)
+#' allModels = LDL_ML_Main_All_Models(SampleData, 0.8,ReportMultiPlot = FALSE,ComparisonPlot=FALSE)
 #' }
 #' @importFrom utils capture.output
 #' @export
