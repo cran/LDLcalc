@@ -95,13 +95,25 @@ LDL_eq<-function(TC,HDL,TG,EqMethod){
 #' @examples
 #' LDLallEq(170,35,174)
 #' @export
-LDLallEq<-function(TC,HDL,TG){
-  EqMethod<-c("Friedewald","Ahmadi","Chen","Anandaraja","NewFormula","deCordova",
-              "Vujovic","Hattori","Puavillai","Hatta","Martin180","Martin360","Martin2000","DeLong","Rao")
-  LDLallEquations<-c()
-  for (i in (seq(1:15 ))){
-    LDLallEquations[i]<-LDL_eq(TC,HDL,TG,EqMethod[i])
-    LDLallEquations1=message(paste(EqMethod[i],":" ,LDLallEquations[i]))
+LDLallEq <- function(TC, HDL, TG) {
+  # Define the equation methods
+  EqMethod <- c("Friedewald", "Ahmadi", "Chen", "Anandaraja", "NewFormula", "deCordova",
+                "Vujovic", "Hattori", "Puavillai", "Hatta", "Martin180", "Martin360",
+                "Martin2000", "DeLong", "Rao")
+
+  # Initialize vectors to store results
+  LDLValues <- numeric(length(EqMethod))
+  MethodNames <- character(length(EqMethod))
+
+  # Calculate LDL values for each method
+  for (i in seq_along(EqMethod)) {
+    LDLValues[i] <- LDL_eq(TC, HDL, TG, EqMethod[i]) # Assuming LDL_eq returns the calculated LDL value
+    MethodNames[i] <- EqMethod[i]
   }
-  return("LDL was calculated using all available equations")
+
+  # Create a data frame with the results
+  resultsDf <- data.frame(Method = MethodNames, LDL = LDLValues)
+
+  return(resultsDf)
 }
+

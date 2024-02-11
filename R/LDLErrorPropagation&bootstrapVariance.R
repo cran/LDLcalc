@@ -23,42 +23,54 @@
 #' LDLboostrpVar = LDLbootVrnc(sampleA$CHOL, sampleA$HDL, sampleA$TG)
 #' }
 #' @export
-  LDLbootVrnc <- function(CHOL, HDL, TG, sampleSize=length(CHOL), noOfReps=1000, pb=F) {
-  if((length(CHOL) != length(HDL)) |
-     (length(CHOL) != length(TG)) |
-     (length(HDL) != length(TG)) ) {
-    print("The three parameters must have the same number of measurements");
-    return()
+LDLbootVrnc <- function(CHOL, HDL, TG, sampleSize=length(CHOL), noOfReps=1000, pb=F) {
+  # Check for equal length of input vectors
+  if((length(CHOL) != length(HDL)) | (length(CHOL) != length(TG)) | (length(HDL) != length(TG))) {
+    print("The three parameters must have the same number of measurements")
+    return(NULL)
   }
-  n = length(CHOL)
-  if(sampleSize>n) {
-    print("Size of bootstraped datasets cannot be larger than the original. Setting k=n")
-    sampleSize=n;
-    print(paste("=", n))
+  
+  n <- length(CHOL)
+  if(sampleSize > n) {
+    print("Size of bootstrapped datasets cannot be larger than the original. Setting sampleSize to n")
+    sampleSize <- n
   }
-  dfTmp <- data.frame(cbind(CHOL, HDL, TG))
-  colnames(dfTmp) <- c("CHOL", "HDL", "TG")
-  dtLDLBoot = data.table::data.table("Mean"=numeric(noOfReps),
-                         "Median"=numeric(noOfReps),
-                         "Var"=numeric(noOfReps),
-                         "CV"=numeric(noOfReps))
+  
+  dfTmp <- data.frame(CHOL, HDL, TG) # Simplified data frame creation
+  
+  # Define CV function
+  CV <- function(x) {
+    if(mean(x) == 0) return(NA) # Avoid division by zero
+    sd(x) / mean(x)
+  }
+  
+  resultsList <- list() # Initialize list to store results
+  
   if(pb) pbar <- txtProgressBar(min = 0, max = noOfReps, style = 3)
-  for(bootIdx in seq(1,noOfReps)) {
-    dfSmpl <- dfTmp[sample(nrow(dfTmp), size=sampleSize, replace = T),]
-    dfLDLSmpl = dfSmpl$CHOL - dfSmpl$HDL - (dfSmpl$TG/5)
-    LDLSmplMean = mean(dfLDLSmpl)
-    LDLSmplMedian = median(dfLDLSmpl)
-    LDLSmplVar = var(dfLDLSmpl)
-    LDLSmplCV = CV(dfLDLSmpl)
-    sets::set(dtLDLBoot, i=bootIdx, j=1L, value=LDLSmplMean)
-    sets::set(dtLDLBoot, i=bootIdx, j=2L, value=LDLSmplMedian)
-    sets::set(dtLDLBoot, i=bootIdx, j=3L, value=LDLSmplVar)
-    sets::set(dtLDLBoot, i=bootIdx, j=4L, value=LDLSmplCV)
+  
+  for(bootIdx in 1:noOfReps) {
+    dfSmpl <- dfTmp[sample(nrow(dfTmp), size=sampleSize, replace = TRUE),]
+    dfLDLSmpl <- dfSmpl$CHOL - dfSmpl$HDL - (dfSmpl$TG / 5)
+    LDLSmplMean <- mean(dfLDLSmpl)
+    LDLSmplMedian <- median(dfLDLSmpl)
+    LDLSmplVar <- var(dfLDLSmpl)
+    LDLSmplCV <- CV(dfLDLSmpl)
+    
+    resultsList[[bootIdx]] <- list(Mean = LDLSmplMean, Median = LDLSmplMedian, Var = LDLSmplVar, CV = LDLSmplCV)
+    
     if(pb) setTxtProgressBar(pbar, bootIdx)
   }
-  return(list("dataTable"=dtLDLBoot, "Mean"=median(dtLDLBoot$Mean),
-              "Var"=median(dtLDLBoot$Var), "CV"=median(dtLDLBoot$CV)))
+  
+  # Convert results list to data.table
+  dtLDLBoot <- data.table::rbindlist(resultsList)
+  
+  # Set column names
+  stats::setNames(dtLDLBoot, c("Mean", "Median", "Var", "CV"))
+  
+  return(list("dataTable" = dtLDLBoot, "Mean" = median(dtLDLBoot$Mean),
+              "Var" = median(dtLDLBoot$Var), "CV" = median(dtLDLBoot$CV)))
 }
+
 
 #' @title Calculate LDL variance using error propagation
 #' @description Function to calculate the LDL Variance according to error propagation (delta) method.

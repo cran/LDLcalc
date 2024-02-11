@@ -1,6 +1,6 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
-  collapse = TRUE,
+  collapse = TRUE,dpi = 96,
   comment = "#>"
 )
 
@@ -12,11 +12,11 @@ require(gridExtra)
 require(data.table)
 require(tidyr)
 
-## ---- loadSample--------------------------------------------------------------
+## ----loadSample---------------------------------------------------------------
 
 dfSmplA <- sampleA
 
-## ---- calcAIP-----------------------------------------------------------------
+## ----calcAIP------------------------------------------------------------------
 dfSmplA$AIPrep1 <- AIPcalc(TG=dfSmplA$TGrep1,
                                     HDL=dfSmplA$HDLrep1, SI=F)
 dfSmplA$AIPrep2 <- AIPcalc(TG=dfSmplA$TGrep2,
@@ -24,17 +24,17 @@ dfSmplA$AIPrep2 <- AIPcalc(TG=dfSmplA$TGrep2,
 dfSmplA$AIP <- AIPcalc(TG=dfSmplA$TG,
                                 HDL=dfSmplA$HDL, SI=F)
 
-## ---- discrHist, fig.height=4, fig.width=8, fig.align="center", fig.cap="Discrete histogram and the corresponding normal distribution."----
+## ----discrHist, fig.height=4, fig.width=8, fig.align="center", fig.cap="Discrete histogram and the corresponding normal distribution."----
 # Create a list of the parameters to be plotted.
 lstParam <- list("CHOL", "HDL", "TG")
 # Use lapply to apply the PlotDiscrHist function to all parameters.
 lstPlt <- lapply(lstParam, LDLcalc::PlotDiscrHist, DF=dfSmplA)
 do.call("grid.arrange", c(lstPlt, ncol = 3))
 
-## ---- echo=F------------------------------------------------------------------
+## ----echo=F-------------------------------------------------------------------
 rm(lstParam, lstPlt)
 
-## ---- fig.cap="Discrete histogram and corresponding normal distribution of LDL."----
+## ----fig.cap="Discrete histogram and corresponding normal distribution of LDL."----
 PlotDiscrHist(dfSmplA, param="LDL", title="LDL")
 JSDNormal(dfSmplA, "LDL")$JSD
 
@@ -43,18 +43,18 @@ distr1 <- seq(from=100, to=130, by=1)
 distr2 <- seq(from=140, to=170, by=1)
 JSD(distr1, distr2)$JSD
 
-## ---- echo=F------------------------------------------------------------------
+## ----echo=F-------------------------------------------------------------------
 rm(distr1, distr2)
 
-## ---- LDLchebyshev------------------------------------------------------------
+## ----LDLchebyshev-------------------------------------------------------------
 LDLchebyshev <- chebyshev(vec=dfSmplA$LDL)
 LDLchebyshev <- unlist(LDLchebyshev)
 print(LDLchebyshev)
 
-## ---- chebysevRange-----------------------------------------------------------
+## ----chebysevRange------------------------------------------------------------
 sum(dfSmplA$LDL>=157 & dfSmplA$LDL<=198) / nrow(dfSmplA) * 100
 
-## ---- corcov------------------------------------------------------------------
+## ----corcov-------------------------------------------------------------------
 lstParam1 <- list("CHOL", "CHOL", "HDL")# List of the first parameter to calculate correlation on.
 lstParam2 <- list("HDL", "TG", "TG")# List of the second parameter to calculate correlation on.
 #Function to calculate correlation and covariance of the pairs of parameters
@@ -69,24 +69,24 @@ colnames(mtrxCorCov) <- c("CHOL-HDL", "CHOL-TG", "HDL-TG")
 
 print(mtrxCorCov)
 
-## ---- coorplot, fig.height=4, fig.width=8, fig.align="center", fig.cap="Scatterplot of pairs of the parameters."----
+## ----coorplot, fig.height=4, fig.width=8, fig.align="center", fig.cap="Scatterplot of pairs of the parameters."----
 grid.arrange(PlotCorrWithRegrLine(dfSmplA, "CHOL", "HDL"),
              PlotCorrWithRegrLine(dfSmplA, "CHOL", "TG"),
              PlotCorrWithRegrLine(dfSmplA, "HDL", "TG"),
              ncol=3)
 
-## ---- empirVar----------------------------------------------------------------
+## ----empirVar-----------------------------------------------------------------
 vecEmpirVar <- c("LDL Empirical Variance" = round(var(dfSmplA$LDL), 2),
                  "AIP Empirical Variance" = round(var(dfSmplA$AIP), 4))
 print(vecEmpirVar)
 
-## ---- LDLErrPrpVar------------------------------------------------------------
+## ----LDLErrPrpVar-------------------------------------------------------------
 LDLErrPrpVar <- LDLErrPrp(CHOL = dfSmplA$CHOL,
                                     HDL = dfSmplA$HDL,
                                     TG = dfSmplA$TG)
 print(round(LDLErrPrpVar), 2)
 
-## ---- AIPErrPrpVar------------------------------------------------------------
+## ----AIPErrPrpVar-------------------------------------------------------------
 AIPErrPrpVar1Ord <-
   AIPErrPrp(TG = dfSmplA$TG,
                        HDL = dfSmplA$HDL,
@@ -101,7 +101,7 @@ AIPErrProp <- c("AIP First Order Error Propagation" = AIPErrPrpVar1Ord,
                 "AIP Second Order Error Propagation" = AIPErrPrpVar2Ord)
 print(AIPErrProp)
 
-## ---- echo=F------------------------------------------------------------------
+## ----echo=F-------------------------------------------------------------------
 vecVariances <- c(NA,
                   format(var(dfSmplA$LDL), nsmall=2),
                   format(LDLErrPrpVar, nsmall=2),
@@ -120,19 +120,19 @@ dfVariances <-
     vecVariances)
 colnames(dfVariances) <- c("Variance type", "Variance Value")
 
-## ---- echo=F------------------------------------------------------------------
+## ----echo=F-------------------------------------------------------------------
 options(knitr.kable.NA = "")
 knitr::kable(dfVariances, format = "latex", longtable = F, 
              caption="Empirical and Error Propagation Variance for LDL and AIP")
 
-## ---- cache=F-----------------------------------------------------------------
+## ----cache=F------------------------------------------------------------------
 LDLbootVar <- LDLbootVrnc(CHOL = dfSmplA$CHOL, HDL = dfSmplA$HDL,
                        TG = dfSmplA$TG, noOfReps = 10, pb=F)
 
 AIPbootVar <- AIPbootVrnc(TG = dfSmplA$TG, HDL = dfSmplA$HDL,
                            SI= F, noOfReps = 10, pb=F)
 
-## ---- echo=F------------------------------------------------------------------
+## ----echo=F-------------------------------------------------------------------
 vecVariances <- c(NA,
                   format(var(dfSmplA$LDL), nsmall=2),
                   format(LDLErrPrpVar, nsmall=2),
@@ -156,7 +156,7 @@ dfVariances <-
     vecVariances)
 colnames(dfVariances) <- c("Variance type", "Variance Value")
 
-## ---- echo=F------------------------------------------------------------------
+## ----echo=F-------------------------------------------------------------------
 options(knitr.kable.NA = "")
 knitr::kable(dfVariances, format = "latex", longtable = F,
              caption="Empirical, Error Propagation and Bootstrap Variance
@@ -176,20 +176,20 @@ knitr::kable(dfVariances, format = "latex", longtable = F,
 ## -----------------------------------------------------------------------------
 CV(dfSmplA$CHOL)
 
-## ---- CHOLVrncChng, fig.height=6,,fig.width=8, fig.align="center", position="!h", fig.cap="Means and variances for the CHOL distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
+## ----CHOLVrncChng, fig.height=6,,fig.width=8, fig.align="center", position="!h", fig.cap="Means and variances for the CHOL distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
 dfSmplACHOLChngCV <- CV_Range(dfSmplA$CHOL,
                                        lower_CV_Bound = 0,
                                        upper_CV_Bound = 20,
                                        maxRandIter = 1000,
                                        plot=T)
 
-## ---- LDL_CHOLVrnc500,results='hide',eval=FALSE, cache=F----------------------
+## ----LDL_CHOLVrnc500,results='hide',eval=FALSE, cache=F-----------------------
 #  LDL_Vrnc_Chng_CHOL <- LDL_CHOLVrnc(dfSmplACHOLChngCV,
 #                                              dfSmplA$HDL,
 #                                              dfSmplA$TG,
 #                                              bootStrpReps = 500)
 
-## ---- fig.height=3, fig.width=8,eval=FALSE, fig.cap="Variance of LDL (error propagation and boostrap for 500 iterations), when the CHOL variance changes."----
+## ----fig.height=3, fig.width=8,eval=FALSE, fig.cap="Variance of LDL (error propagation and boostrap for 500 iterations), when the CHOL variance changes."----
 #  # First we will convert the list output of LDLcalc::LDL_CHOLVrnc to a
 #  # data frame
 #  LDL_Vrnc_Chng_CHOL <- do.call(cbind.data.frame, LDL_Vrnc_Chng_CHOL)
@@ -214,13 +214,13 @@ dfSmplACHOLChngCV <- CV_Range(dfSmplA$CHOL,
 #                            labels = c("Bootstrap Variance",
 #                                       "Error Propagation Variance"))
 
-## ---- LDL_CHOLVrnc2000, results='hide',eval=FALSE,cache=F---------------------
+## ----LDL_CHOLVrnc2000, results='hide',eval=FALSE,cache=F----------------------
 #  LDL_Vrnc_Chng_CHOL <- LDL_CHOLVrnc(dfSmplACHOLChngCV,
 #                                              dfSmplA$HDL,
 #                                              dfSmplA$TG,
 #                                              bootStrpReps = 2000)
 
-## ---- echo=T, fig.height=3, fig.width=8,eval=FALSE, fig.cap="Variance of LDL (error propagation and boostrap for 2000 iterations), when the CHOL variance changes."----
+## ----echo=T, fig.height=3, fig.width=8,eval=FALSE, fig.cap="Variance of LDL (error propagation and boostrap for 2000 iterations), when the CHOL variance changes."----
 #  LDL_Vrnc_Chng_CHOL <- do.call(cbind.data.frame, LDL_Vrnc_Chng_CHOL)
 #  
 #  dfCHOLChngVrnc <- cbind.data.frame(CHOLVrnc= apply(dfSmplACHOLChngCV, 2, var),
@@ -244,20 +244,20 @@ dfSmplACHOLChngCV <- CV_Range(dfSmplA$CHOL,
 ## -----------------------------------------------------------------------------
 CV(dfSmplA$HDL)
 
-## ---- HDLVrncChng, fig.height=7, fig.width=8, fig.align="center", fig.cap="Means and variances for the HDL distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
+## ----HDLVrncChng, fig.height=7, fig.width=8, fig.align="center", fig.cap="Means and variances for the HDL distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
 dfSmplAHDLChngCV <- CV_Range(dfSmplA$HDL,
                                        lower_CV_Bound = 0,
                                        upper_CV_Bound = 20,
                                        maxRandIter = 10000,
                                        plot=T)
 
-## ---- LDL_HDLVrnc2000,results='hide',eval=FALSE, cache=F----------------------
+## ----LDL_HDLVrnc2000,results='hide',eval=FALSE, cache=F-----------------------
 #  LDL_Vrnc_Chng_HDL <- LDL_HDLVrnc(dfSmplAHDLChngCV,
 #                                              dfSmplA$CHOL,
 #                                              dfSmplA$TG,
 #                                              bootStrpReps = 2000)
 
-## ---- fig.height=3, fig.width=8, position="!h", eval=FALSE,fig.cap="Variance of LDL (error propagation and boostrap for 2000 iterations), when the HDL variance changes."----
+## ----fig.height=3, fig.width=8, position="!h", eval=FALSE,fig.cap="Variance of LDL (error propagation and boostrap for 2000 iterations), when the HDL variance changes."----
 #  LDL_Vrnc_Chng_HDL <- do.call(cbind.data.frame, LDL_Vrnc_Chng_HDL)
 #  
 #  # Create a data frame with the changing HDL variance and the error propagation
@@ -284,20 +284,20 @@ dfSmplAHDLChngCV <- CV_Range(dfSmplA$HDL,
 ## -----------------------------------------------------------------------------
 CV(dfSmplA$TG)
 
-## ---- TGVrncChng, fig.height=6, fig.width=8, fig.align="center", fig.cap="Means and variances for the TG distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
+## ----TGVrncChng, fig.height=6, fig.width=8, fig.align="center", fig.cap="Means and variances for the TG distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
 dfSmplATGChngCV <- CV_Range(dfSmplA$TG,
                                        lower_CV_Bound = 0,
                                        upper_CV_Bound = 20,
                                        maxRandIter = 10000,
                                        plot=T)
 
-## ---- LDL_TGVrnc2000,eval=FALSE,results='hide',cache=F------------------------
+## ----LDL_TGVrnc2000,eval=FALSE,results='hide',cache=F-------------------------
 #  LDL_Vrnc_Chng_TG <- LDL_TGVrnc(dfSmplATGChngCV,
 #                                              dfSmplA$CHOL,
 #                                              dfSmplA$HDL,
 #                                              bootStrpReps = 2000)
 
-## ---- fig.height=3,eval=FALSE, fig.width=8, fig.cap="Variance of LDL (error propagation and boostrap for 2000 iterations), when the TG variance changes."----
+## ----fig.height=3,eval=FALSE, fig.width=8, fig.cap="Variance of LDL (error propagation and boostrap for 2000 iterations), when the TG variance changes."----
 #  LDL_Vrnc_Chng_TG <- do.call(cbind.data.frame, LDL_Vrnc_Chng_TG)
 #  
 #  # Create a data frame with the changing TG varince and the error propagation
@@ -324,20 +324,20 @@ dfSmplATGChngCV <- CV_Range(dfSmplA$TG,
 ## -----------------------------------------------------------------------------
 CV(dfSmplA$HDL)
 
-## ---- HDLVrncChng_AIP, fig.height=6, fig.width=8, fig.align="center", fig.cap="Means and variances for the HDL distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
+## ----HDLVrncChng_AIP, fig.height=6, fig.width=8, fig.align="center", fig.cap="Means and variances for the HDL distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
 dfSmplAHDLChngCV <- CV_Range(dfSmplA$HDL,
                                        lower_CV_Bound = 0,
                                        upper_CV_Bound = 20,
                                        maxRandIter = 10000,
                                        plot=T)
 
-## ---- AIP_HDLVrnc2000, eval=FALSE,cache=F, results='hide'---------------------
+## ----AIP_HDLVrnc2000, eval=FALSE,cache=F, results='hide'----------------------
 #  AIP_Vrnc_Chng_HDL <- AIP_HDLVrnc(dfSmplAHDLChngCV,
 #                                            dfSmplA$TG,
 #                                            SI=FALSE,
 #                                            bootStrpReps = 2000)
 
-## ---- fig.height=3,  eval=FALSE, fig.width=8, fig.cap="Variance of AIP (error propagation and boostrap for 2000 iterations), when the HDL variance changes."----
+## ----fig.height=3,  eval=FALSE, fig.width=8, fig.cap="Variance of AIP (error propagation and boostrap for 2000 iterations), when the HDL variance changes."----
 #  AIP_Vrnc_Chng_HDL <- do.call(cbind.data.frame, AIP_Vrnc_Chng_HDL)
 #  
 #  # Create a data frame with the changing HDL varince and the error propagation
@@ -366,20 +366,20 @@ dfSmplAHDLChngCV <- CV_Range(dfSmplA$HDL,
 ## -----------------------------------------------------------------------------
 CV(dfSmplA$TG)
 
-## ---- TGVrncChng_AIP, fig.height=6, fig.width=8, fig.align="center", fig.cap="Means and variances for the TG distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
+## ----TGVrncChng_AIP, fig.height=6, fig.width=8, fig.align="center", fig.cap="Means and variances for the TG distributions, in order to check that the mean stays constant and the variance increases.", cache=F----
 dfSmplATGChngCV <- CV_Range(dfSmplA$TG,
                                        lower_CV_Bound = 0,
                                        upper_CV_Bound = 20,
                                        maxRandIter = 10000,
                                        plot=T)
 
-## ---- AIP_TGVrnc2000,eval=FALSE,results='hide', cache=F-----------------------
+## ----AIP_TGVrnc2000,eval=FALSE,results='hide', cache=F------------------------
 #  AIP_Vrnc_Chng_TG <- AIP_TGVrnc(dfSmplATGChngCV,
 #                                            dfSmplA$HDL,
 #                                            SI=FALSE,
 #                                            bootStrpReps = 2000)
 
-## ---- fig.height=3,eval=FALSE, fig.width=8, fig.cap="Variance of AIP (error propagation and boostrap for 2000 iterations), when the TG variance changes."----
+## ----fig.height=3,eval=FALSE, fig.width=8, fig.cap="Variance of AIP (error propagation and boostrap for 2000 iterations), when the TG variance changes."----
 #  AIP_Vrnc_Chng_TG <- do.call(cbind.data.frame, AIP_Vrnc_Chng_TG)
 #  
 #  # Create a data frame with the changing TG variance and the error propagation

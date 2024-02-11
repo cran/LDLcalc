@@ -155,41 +155,52 @@ AIPErrPrp2Ord <-function(TG, HDL, SI=TRUE, roundDigit=5) {
 #' AIPbootstrVar = AIPbootVrnc(sampleA$TG,sampleA$HDL)
 #' }
 #' @export
-AIPbootVrnc <- function(TG, HDL, sampleSize=length(TG), SI=TRUE,
-                        noOfReps=1000, pb=F) {
-  if (SI==FALSE){
-    TG=TG*0.01129
-    HDL=HDL*0.0259
+AIPbootVrnc <- function(TG, HDL, sampleSize=length(TG), SI=TRUE, noOfReps=1000, pb=F) {
+  # Μετατροπή σε SI μονάδες αν απαιτείται
+  if (SI == FALSE) {
+    TG <- TG * 0.01129
+    HDL <- HDL * 0.0259
   }
-  if( (length(HDL) != length(TG)) ) {
-    message("The two parameters must have the same number of measurements"); return()
+  
+  # Έλεγχος για ίσο μήκος παραμέτρων
+  if((length(HDL) != length(TG))) {
+    message("The two parameters must have the same number of measurements")
+    return(NULL)
   }
-  n = length(TG)
-  if(sampleSize>n) {
-    message("Size of bootstraped datasets cannot be larger than the original. Setting k=n")
-    sampleSize=n;
-    print(paste("=", n))
+  
+  n <- length(TG)
+  if(sampleSize > n) {
+    message("Size of bootstrapped datasets cannot be larger than the original dataset. Setting sampleSize to n")
+    sampleSize <- n
   }
-  dfTmp <- data.frame(cbind(TG, HDL))
-  colnames(dfTmp) <- c("TG", "HDL")
-  dtAIPBoot = data.table::data.table("Mean"=numeric(noOfReps),
-                         "Median"=numeric(noOfReps),
-                         "Var"=numeric(noOfReps),
-                         "CV"=numeric(noOfReps))
+  
+  dfTmp <- data.frame(TG, HDL)
+  
+  # Αρχικοποίηση λίστας για αποθήκευση των αποτελεσμάτων
+  resultsList <- list()
+  
   if(pb) pb <- txtProgressBar(min = 0, max = noOfReps, style = 3)
-  for(bootIdx in seq(1,noOfReps)) {
-    dfSmpl <- dfTmp[sample(nrow(dfTmp), size=sampleSize, replace = T),]
-    dfAIPSmpl = log10( (dfSmpl$TG) / (dfSmpl$HDL) )
-    AIPSmplMean = mean(dfAIPSmpl)
-    AIPSmplMedian = median(dfAIPSmpl)
-    AIPSmplVar = var(dfAIPSmpl)
-    AIPSmplCV = CV(dfAIPSmpl)
-    sets::set(dtAIPBoot, i=bootIdx, j=1L, value=AIPSmplMean)
-    sets::set(dtAIPBoot, i=bootIdx, j=2L, value=AIPSmplMedian)
-    sets::set(dtAIPBoot, i=bootIdx, j=3L, value=AIPSmplVar)
-    sets::set(dtAIPBoot, i=bootIdx, j=4L, value=AIPSmplCV)
+  
+  for(bootIdx in 1:noOfReps) {
+    dfSmpl <- dfTmp[sample(nrow(dfTmp), size=sampleSize, replace = TRUE), ]
+    dfAIPSmpl <- log10(dfSmpl$TG / dfSmpl$HDL)
+    AIPSmplMean <- mean(dfAIPSmpl)
+    AIPSmplMedian <- median(dfAIPSmpl)
+    AIPSmplVar <- var(dfAIPSmpl)
+    AIPSmplCV <- CV(dfAIPSmpl) # Υποθέτουμε ότι η συνάρτηση CV είναι ήδη ορισμένη
+    
+    # Προσθήκη των αποτελεσμάτων στη λίστα
+    resultsList[[bootIdx]] <- list(Mean = AIPSmplMean, Median = AIPSmplMedian, Var = AIPSmplVar, CV = AIPSmplCV)
+    
     if(pb) setTxtProgressBar(pb, bootIdx)
   }
-  return(list("dataTable"=dtAIPBoot, "Mean"=median(dtAIPBoot$Mean),
-              "Var"=median(dtAIPBoot$Var), "CV"=median(dtAIPBoot$CV)))
+  
+  # Μετατροπή της λίστας αποτελεσμάτων σε data.table
+  dtAIPBoot <- data.table::rbindlist(resultsList)
+  
+  # Ορισμός ονομάτων στηλών
+  stats::setNames(dtAIPBoot, c("Mean", "Median", "Var", "CV"))
+  
+  return(list("dataTable" = dtAIPBoot, "Mean" = median(dtAIPBoot$Mean),
+              "Var" = median(dtAIPBoot$Var), "CV" = median(dtAIPBoot$CV)))
 }
